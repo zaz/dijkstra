@@ -12,9 +12,8 @@ class Digraph(object):
     def addNode(self, *nodes):
         [self.nodes.add(n) for n in nodes]
 
-    def addEdge(self, frm, to, d=1e309, o=0):
-        self.addNode(frm)
-        self.addNode(to)
+    def addEdge(self, frm, to, d=1e309):
+        self.addNode(frm, to)
         self.neighbours[frm].add(to)
         self.dist[ frm, to ] = d
         self.odist[ frm, to ] = o
@@ -22,21 +21,20 @@ class Digraph(object):
     def dijkstra(self, start, maxD=1e309, maxDO=1e309):
         """Returns a map of nodes to distance from start and a map of nodes to
         the neighbouring node that is closest to start."""
-        # total distance from origin:
+        # total distance from origin
         tdist = defaultdict(lambda: 1e309)
         tdist[start] = 0
         tOdist = defaultdict(lambda: 1e309)
         tOdist[start] = 0
+        # neighbour that is nearest to the origin
         preceding_node = {}
+        unvisited = self.nodes
 
-        nodes = self.nodes
-
-        while nodes:
-            current = nodes.intersection(tdist.keys())
+        while unvisited:
+            current = unvisited.intersection(tdist.keys())
             if not current: break
             min_node = min(current, key=tdist.get)
-
-            nodes.remove(min_node)
+            unvisited.remove(min_node)
 
             for neighbour in self.neighbours[min_node]:
                 d  =  tdist[min_node] +  self.dist[min_node, neighbour]
@@ -49,6 +47,7 @@ class Digraph(object):
         return tdist, preceding_node
 
     def min_path(self, start, end, maxD=1e309, maxDO=1e309):
+        """Returns the minimum distance and path from start to end."""
         tdist, preceding_node = self.dijkstra(start, maxD, maxDO)
         dist = tdist[end]
         backpath = [end]
@@ -62,11 +61,8 @@ class Digraph(object):
 
         return dist, path
 
-    def path_to(start, end, maxD=1e309, maxDO=1e309):
-        return self.min_path(start, end, maxD, maxDO)[1]
-
-    def dist_to(start, end, maxD=1e309, maxDO=1e309):
-        return self.min_path(start, end, maxD, maxDO)[0]
+    def dist_to(self, *args): return self.min_path(*args)[0]
+    def path_to(self, *args): return self.min_path(*args)[1]
 
 
 def load_map(mapFilename):
