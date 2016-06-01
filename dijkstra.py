@@ -1,4 +1,5 @@
 # Zaz Brown
+# Public Domain
 """An efficient algorithm to find shortest paths between nodes in a graph."""
 from collections import defaultdict
 
