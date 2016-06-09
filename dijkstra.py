@@ -25,7 +25,7 @@ class Digraph(object):
         tdist[start] = 0
         # neighbour that is nearest to the origin
         preceding_node = {}
-        unvisited = self.nodes
+        unvisited = set(self.nodes)
 
         while unvisited:
             current = unvisited.intersection(tdist.keys())
