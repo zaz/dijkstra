@@ -3,6 +3,8 @@
 """An efficient algorithm to find shortest paths between nodes in a directed graph."""
 from collections import defaultdict
 
+INFINITY = 1e309
+
 class Digraph(object):
     def __init__(self, nodes=[]):
         self.nodes = set()
@@ -12,16 +14,16 @@ class Digraph(object):
     def addNode(self, *nodes):
         [self.nodes.add(n) for n in nodes]
 
-    def addEdge(self, frm, to, d=1e309):
+    def addEdge(self, frm, to, d=INFINITY):
         self.addNode(frm, to)
         self.neighbours[frm].add(to)
         self.dist[ frm, to ] = d
 
-    def dijkstra(self, start, maxD=1e309):
+    def dijkstra(self, start, maxD=INFINITY):
         """Returns a map of nodes to distance from start and a map of nodes to
         the neighbouring node that is closest to start."""
         # total distance from origin
-        tdist = defaultdict(lambda: 1e309)
+        tdist = defaultdict(lambda: INFINITY)
         tdist[start] = 0
         # neighbour that is nearest to the origin
         preceding_node = {}
@@ -41,7 +43,7 @@ class Digraph(object):
 
         return tdist, preceding_node
 
-    def min_path(self, start, end, maxD=1e309):
+    def min_path(self, start, end, maxD=INFINITY):
         """Returns the minimum distance and path from start to end."""
         tdist, preceding_node = self.dijkstra(start, maxD)
         dist = tdist[end]
