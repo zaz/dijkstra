@@ -8,7 +8,7 @@ INFINITY = 1e309
 class Digraph(object):
     def __init__(self, nodes=[]):
         self.nodes = set()
-        self.neighbours = defaultdict(set)
+        self.neighbors = defaultdict(set)
         self.dist = {}
 
     def addNode(self, *nodes):
@@ -16,16 +16,16 @@ class Digraph(object):
 
     def addEdge(self, frm, to, d=INFINITY):
         self.addNode(frm, to)
-        self.neighbours[frm].add(to)
+        self.neighbors[frm].add(to)
         self.dist[ frm, to ] = d
 
     def dijkstra(self, start, maxD=INFINITY):
         """Returns a map of nodes to distance from start and a map of nodes to
-        the neighbouring node that is closest to start."""
+        the neighboring node that is closest to start."""
         # total distance from origin
         tdist = defaultdict(lambda: INFINITY)
         tdist[start] = 0
-        # neighbour that is nearest to the origin
+        # neighbor that is nearest to the origin
         preceding_node = {}
         unvisited = set(self.nodes)
 
@@ -35,11 +35,11 @@ class Digraph(object):
             min_node = min(current, key=tdist.get)
             unvisited.remove(min_node)
 
-            for neighbour in self.neighbours[min_node]:
-                d = tdist[min_node] + self.dist[min_node, neighbour]
-                if tdist[neighbour] > d and maxD >= d:
-                    tdist[neighbour] = d
-                    preceding_node[neighbour] = min_node
+            for neighbor in self.neighbors[min_node]:
+                d = tdist[min_node] + self.dist[min_node, neighbor]
+                if tdist[neighbor] > d and maxD >= d:
+                    tdist[neighbor] = d
+                    preceding_node[neighbor] = min_node
 
         return tdist, preceding_node
 
@@ -63,7 +63,7 @@ class Digraph(object):
 
 
 def load_map(mapFilename):
-    """Build a graph from a file with lines of the form: from to weight"""
+    """Build a graph from a file with lines of the form: from to distance"""
     graph = Digraph()
     f = open(mapFilename)
     for line in f:
